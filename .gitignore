@@ -1,0 +1,25 @@
+# Environment variables & secrets
+.env
+*.env
+.env.*
+!.env.example
+riskgraph_backend/.env
+riskgraph_backend/*.env
+!riskgraph_backend/.env.example
+
+# Python cache & build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+venv/
+env/
+ENV/
+
+# Model Joblib artifacts (if tracked via release / storage)
+# *.joblib

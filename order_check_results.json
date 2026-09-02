@@ -1,0 +1,92 @@
+{
+  "ORD100028": {
+    "risk_score": 0.1072,
+    "risk_level": "LOW",
+    "recommended_action": "Normal refund processing",
+    "top_signals": [
+      "Dispute reason (Changed mind) correlates with elevated claim frequency"
+    ]
+  },
+  "ORD100007": {
+    "risk_score": 0.4188,
+    "risk_level": "MEDIUM",
+    "recommended_action": "Additional verification",
+    "top_signals": [
+      "Recurring refunds disbursed to shared device hardware (2 prior refunds)"
+    ]
+  },
+  "ORD100003": {
+    "risk_score": 0.1878,
+    "risk_level": "LOW",
+    "recommended_action": "Normal refund processing",
+    "top_signals": [
+      "Standard transaction metrics within normal statistical baseline"
+    ]
+  },
+  "ORD100001": {
+    "risk_score": 0.4119,
+    "risk_level": "MEDIUM",
+    "recommended_action": "Additional verification",
+    "top_signals": [
+      "Established tenure (1324d) with zero prior refund disputes"
+    ]
+  },
+  "ORD100002": {
+    "risk_score": 0.163,
+    "risk_level": "LOW",
+    "recommended_action": "Normal refund processing",
+    "top_signals": [
+      "Basket value exceeds customer average by 3.2x"
+    ]
+  },
+  "ORD100004": {
+    "risk_score": 0.1989,
+    "risk_level": "LOW",
+    "recommended_action": "Normal refund processing",
+    "top_signals": [
+      "Recurring refunds disbursed to shared device hardware (2 prior refunds)"
+    ]
+  },
+  "ORD100005": {
+    "risk_score": 0.4021,
+    "risk_level": "MEDIUM",
+    "recommended_action": "Additional verification",
+    "top_signals": [
+      "Recurring refunds disbursed to shared device hardware (2 prior refunds)",
+      "Basket value exceeds customer average by 2.1x"
+    ]
+  },
+  "ORD100006": {
+    "risk_score": 0.6646,
+    "risk_level": "HIGH",
+    "recommended_action": "Human specialist review",
+    "top_signals": [
+      "Recurring refunds disbursed to shared device hardware (2 prior refunds)"
+    ]
+  },
+  "ORD100010": {
+    "risk_score": 0.2603,
+    "risk_level": "MEDIUM",
+    "recommended_action": "Additional verification",
+    "top_signals": [
+      "Established tenure (1179d) with zero prior refund disputes"
+    ]
+  },
+  "ORD100015": {
+    "risk_score": 0.4077,
+    "risk_level": "MEDIUM",
+    "recommended_action": "Additional verification",
+    "top_signals": [
+      "Recurring refunds disbursed to shared device hardware (3 prior refunds)"
+    ]
+  },
+  "ORD100020": {
+    "risk_score": 0.388,
+    "risk_level": "MEDIUM",
+    "recommended_action": "Additional verification",
+    "top_signals": [
+      "Recurring refunds disbursed to shared device hardware (2 prior refunds)",
+      "Basket value exceeds customer average by 2.7x"
+    ]
+  }
+}
