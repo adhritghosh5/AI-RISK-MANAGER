@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RISKGRAPH — Refund Risk Intelligence</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-logo">RG</div>
+        <div class="brand-text">
+          <h1 class="brand-title">RISKGRAPH</h1>
+          <span class="brand-badge">Refund Risk Intelligence</span>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="system-status">
+          <span class="status-indicator"></span>
+          <span class="status-label">Model C Live</span>
+        </div>
+        <div class="policy-pill">T₁ = 0.20 · T₂ = 0.45</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="main-wrapper">
+    <div class="content-container">
+      
+      <!-- Top Intake & Search Area -->
+      <section class="intake-section">
+        <div class="intake-header">
+          <h2 class="intake-heading">Assess Refund Risk</h2>
+          <p class="intake-subheading">Point-in-time behavioural and entity intelligence for refund decision support.</p>
+        </div>
+
+        <form id="assessment-form" class="assessment-form">
+          <div class="input-row">
+            <div class="input-wrapper">
+              <label for="input-order-id" class="input-label">Order Identifier</label>
+              <div class="input-field-group">
+                <span class="input-icon">#</span>
+                <input 
+                  type="text" 
+                  id="input-order-id" 
+                  name="order_id" 
+                  placeholder="Enter Order ID (e.g. ORD100007)" 
+                  required 
+                  autocomplete="off"
+                  spellcheck="false"
+                  value="ORD100007"
+                />
+              </div>
+              <span class="input-helper">Enter an existing order ID to assess its associated refund request.</span>
+            </div>
+            <button type="submit" id="btn-submit-assess" class="btn-assess">
+              <span id="btn-text">Assess Risk</span>
+              <span id="btn-spinner" class="spinner hidden"></span>
+            </button>
+          </div>
+
+          <!-- Demo Quick Presets -->
+          <div class="demo-pills-row">
+            <span class="demo-pills-label">Demo Cases:</span>
+            <div class="demo-pills-group">
+              <button type="button" class="demo-pill demo-pill-low" id="btn-demo-low">
+                <span class="pill-dot dot-low"></span>
+                <strong>ORD100028</strong> (Low Risk)
+              </button>
+              <button type="button" class="demo-pill demo-pill-med" id="btn-demo-med">
+                <span class="pill-dot dot-med"></span>
+                <strong>ORD100007</strong> (Medium Risk)
+              </button>
+              <button type="button" class="demo-pill demo-pill-high" id="btn-demo-high">
+                <span class="pill-dot dot-high"></span>
+                <strong>ORD100006</strong> (High Risk)
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results Display Screen -->
+      <section class="results-section" id="results-section">
+        
+        <!-- Initial Empty State -->
+        <div id="placeholder-state" class="state-card state-empty">
+          <div class="empty-art">
+            <div class="pulse-ring"></div>
+            <span class="empty-icon">🛡️</span>
+          </div>
+          <h3>Ready for Case Intelligence Evaluation</h3>
+          <p>Enter an Order ID above or select a demo case to reconstruct customer history, entity graphs, and Model C risk assessment.</p>
+        </div>
+
+        <!-- Error State Card (Hidden by default) -->
+        <div id="error-card" class="state-card state-error hidden">
+          <div class="error-icon">⚠️</div>
+          <h3 id="error-title">Assessment Notice</h3>
+          <p id="error-message">Unable to complete assessment.</p>
+        </div>
+
+        <!-- Complete Case Intelligence Dashboard (Hidden by default) -->
+        <div id="assessment-result" class="dashboard-root hidden">
+          
+          <!-- 1. CASE SUMMARY HERO (Top of Dashboard) -->
+          <section class="case-summary-card" id="summary-hero-card">
+            <div class="summary-header-row">
+              <div class="case-title-group">
+                <span class="summary-kicker">CASE INTELLIGENCE OVERVIEW</span>
+                <div class="order-customer-row">
+                  <h2 class="case-order-id" id="sum-order-id">ORD100007</h2>
+                  <span class="customer-tag-pill" id="sum-customer-id">Customer CUST100000</span>
+                  <span class="segment-badge" id="sum-customer-segment">Budget</span>
+                </div>
+              </div>
+              <div class="summary-status-group">
+                <span class="status-caption">ROUTING ACTION</span>
+                <div class="action-highlight-pill" id="sum-action-pill">ADDITIONAL VERIFICATION</div>
+              </div>
+            </div>
+
+            <!-- Metric Cards Row -->
+            <div class="summary-metrics-grid">
+              <div class="metric-box dominant-score-box">
+                <span class="metric-label">PREDICTED RISK SCORE</span>
+                <div class="dominant-score-row">
+                  <span class="score-pct-large" id="sum-score-pct">41.88%</span>
+                  <span class="score-p-val" id="sum-score-pval">(p = 0.4188)</span>
+                </div>
+                <div class="tier-badge-container">
+                  <span class="tier-pill" id="sum-tier-badge">MEDIUM RISK</span>
+                </div>
+              </div>
+
+              <div class="metric-box">
+                <span class="metric-label">CURRENT ORDER VALUE</span>
+                <span class="metric-val" id="sum-order-val">₹97.82</span>
+                <span class="metric-sub" id="sum-order-cat-channel">Grocery · Mobile App</span>
+              </div>
+
+              <div class="metric-box">
+                <span class="metric-label">CUSTOMER TENURE</span>
+                <span class="metric-val" id="sum-tenure-val">1,630 days</span>
+                <span class="metric-sub" id="sum-tenure-sub">6 previous orders</span>
+              </div>
+
+              <div class="metric-box">
+                <span class="metric-label">LINKED EXTERNAL ACCOUNTS</span>
+                <span class="metric-val" id="sum-linked-accounts-val">1 account</span>
+                <span class="metric-sub" id="sum-device-sub">Device & Address Sharing</span>
+              </div>
+            </div>
+
+            <!-- Calibrated Risk Meter Bar -->
+            <div class="risk-meter-container">
+              <div class="meter-labels-row">
+                <span class="meter-edge">0.00 (Low)</span>
+                <span class="meter-threshold-label t1-label">T₁ = 0.20</span>
+                <span class="meter-threshold-label t2-label">T₂ = 0.45</span>
+                <span class="meter-edge">1.00 (High)</span>
+              </div>
+              <div class="risk-meter-track">
+                <div class="meter-zone zone-low" title="Low Risk Zone (< 0.20)"></div>
+                <div class="meter-zone zone-med" title="Medium Risk Zone (0.20 - 0.45)"></div>
+                <div class="meter-zone zone-high" title="High Risk Zone (>= 0.45)"></div>
+                <div class="meter-marker marker-t1" style="left: 20%;"></div>
+                <div class="meter-marker marker-t2" style="left: 45%;"></div>
+                <div class="risk-meter-pin" id="risk-score-pin" style="left: 41.88%;">
+                  <span class="pin-pointer"></span>
+                  <span class="pin-score-tag" id="meter-pin-tag">41.9%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Defensive Safety Guard Notice (Shown prominently for High Risk) -->
+            <div id="safety-guard-notice" class="safety-guard-box hidden">
+              <span class="safety-icon">🛡️</span>
+              <div class="safety-content">
+                <strong>Defensive Decision Support Notice:</strong>
+                <p>Multiple elevated risk signals justify human specialist review. RiskGraph does not automatically reject the refund or penalize the customer. Final refund decisions remain strictly with an authorized human reviewer.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. TWO-COLUMN INTELLIGENCE GRID -->
+          <div class="dashboard-grid">
+            
+            <!-- LEFT COLUMN: ORDER, CUSTOMER PROFILE, BEHAVIOUR & TIMELINE -->
+            <div class="grid-column">
+              
+              <!-- 2A. CURRENT REFUND REQUEST -->
+              <section class="intel-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">📦</span>
+                    <h3 class="card-heading">CURRENT REFUND REQUEST</h3>
+                  </div>
+                  <span class="card-tag tag-primary">Under Assessment</span>
+                </div>
+                <p class="card-context-note">Information for the specific transaction currently requesting refund resolution.</p>
+
+                <div class="data-pairs-grid">
+                  <div class="data-pair">
+                    <span class="dp-label">Order ID</span>
+                    <span class="dp-value mono-val" id="ord-id">ORD100007</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Order Amount</span>
+                    <span class="dp-value highlight-val" id="ord-amount">₹97.82</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Item Quantity</span>
+                    <span class="dp-value" id="ord-qty">1 item</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Product Category</span>
+                    <span class="dp-value" id="ord-category">Grocery</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Payment Method</span>
+                    <span class="dp-value" id="ord-payment">Debit Card</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Sales Channel</span>
+                    <span class="dp-value" id="ord-channel">Mobile App</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Order Date</span>
+                    <span class="dp-value" id="ord-date">2024-11-08</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Shipping Date</span>
+                    <span class="dp-value" id="ord-ship-date">2024-11-09</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Delivery Date</span>
+                    <span class="dp-value" id="ord-deliv-date">2024-11-09</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Return Request Date</span>
+                    <span class="dp-value cutoff-val" id="ord-ret-date">2024-11-12 (Cutoff T)</span>
+                  </div>
+                  <div class="data-pair full-width-pair">
+                    <span class="dp-label">Return Reason</span>
+                    <span class="dp-value reason-badge" id="ord-reason">Wrong product</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- 2B. CUSTOMER PROFILE -->
+              <section class="intel-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">👤</span>
+                    <h3 class="card-heading">CUSTOMER PROFILE</h3>
+                  </div>
+                  <span class="card-tag">Historical Baseline</span>
+                </div>
+                <p class="card-context-note">Account history and purchasing lifetime metrics strictly prior to return request cutoff.</p>
+
+                <div class="data-pairs-grid">
+                  <div class="data-pair">
+                    <span class="dp-label">Customer ID</span>
+                    <span class="dp-value mono-val" id="cp-customer-id">CUST100000</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Customer Segment</span>
+                    <span class="dp-value" id="cp-segment">Budget</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Account Tenure</span>
+                    <span class="dp-value" id="cp-tenure">1,630 days</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Previous Orders</span>
+                    <span class="dp-value" id="cp-prior-orders">6 orders</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Previous Returns</span>
+                    <span class="dp-value" id="cp-prior-returns">2 returns</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Previous Refunds</span>
+                    <span class="dp-value" id="cp-prior-refunds">2 refunds</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Historical Spend</span>
+                    <span class="dp-value" id="cp-prior-spend">₹2,411.09</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Historical Refund Amount</span>
+                    <span class="dp-value" id="cp-refund-spend">₹498.03</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Historical Return Rate</span>
+                    <span class="dp-value" id="cp-ret-rate">33.3%</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Historical Refund Rate</span>
+                    <span class="dp-value" id="cp-ref-rate">33.3%</span>
+                  </div>
+                  <div class="data-pair full-width-pair">
+                    <span class="dp-label">Average Previous Order Value</span>
+                    <span class="dp-value highlight-val" id="cp-avg-order">₹401.85</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- 2C. CUSTOMER BEHAVIOURAL ACTIVITY -->
+              <section class="intel-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">⚡</span>
+                    <h3 class="card-heading">BEHAVIOURAL HISTORY</h3>
+                  </div>
+                  <span class="card-tag">Velocity Windows</span>
+                </div>
+                <p class="card-context-note">Recency, dispute frequency, and temporal velocity metrics.</p>
+
+                <div class="velocity-matrix">
+                  <div class="velocity-row header-vrow">
+                    <span>Window</span>
+                    <span>Orders</span>
+                    <span>Returns</span>
+                    <span>Refunds</span>
+                  </div>
+                  <div class="velocity-row">
+                    <span class="vwindow-title">Last 7 Days</span>
+                    <span id="v7-orders">0</span>
+                    <span id="v7-returns">0</span>
+                    <span id="v7-refunds">0</span>
+                  </div>
+                  <div class="velocity-row">
+                    <span class="vwindow-title">Last 14 Days</span>
+                    <span id="v14-orders">0</span>
+                    <span id="v14-returns">0</span>
+                    <span id="v14-refunds">0</span>
+                  </div>
+                  <div class="velocity-row highlight-vrow">
+                    <span class="vwindow-title">Last 30 Days</span>
+                    <span id="v30-orders">0</span>
+                    <span id="v30-returns">0</span>
+                    <span id="v30-refunds">0</span>
+                  </div>
+                </div>
+
+                <div class="data-pairs-grid mt-3">
+                  <div class="data-pair">
+                    <span class="dp-label">Days Since Previous Order</span>
+                    <span class="dp-value" id="bh-days-prev-ord">125 days</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Days Since Last Return</span>
+                    <span class="dp-value" id="bh-days-prev-ret">278 days</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Order vs Historical Avg</span>
+                    <span class="dp-value" id="bh-amount-ratio">0.24×</span>
+                  </div>
+                  <div class="data-pair">
+                    <span class="dp-label">Refund-to-Spend Ratio</span>
+                    <span class="dp-value" id="bh-refund-spend-ratio">20.7%</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- 2D. CUSTOMER TIMELINE -->
+              <section class="intel-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">⏱️</span>
+                    <h3 class="card-heading">CUSTOMER TIMELINE</h3>
+                  </div>
+                  <span class="card-tag tag-causal">Point-in-Time Sequence</span>
+                </div>
+                <p class="card-context-note">Chronological event progression showing strict data isolation prior to cutoff.</p>
+
+                <div class="timeline-stepper" id="customer-timeline-list">
+                  <!-- Rendered dynamically by app.js -->
+                </div>
+              </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN: ENTITY GRAPH, EXPLANATIONS & DECISION SUPPORT -->
+            <div class="grid-column">
+              
+              <!-- 2E. ENTITY NETWORK -->
+              <section class="intel-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">🕸️</span>
+                    <h3 class="card-heading">ENTITY NETWORK</h3>
+                  </div>
+                  <span class="card-tag tag-graph">Graph Relational</span>
+                </div>
+                <p class="card-context-note">Identity sharing and dispute history linked to device hardware and physical addresses.</p>
+
+                <div class="entity-cards-grid">
+                  <!-- Device Card -->
+                  <div class="entity-subcard">
+                    <div class="entity-subcard-header">
+                      <span class="entity-type-badge">DEVICE</span>
+                      <span class="entity-masked-id" id="ent-device-id">DEV-***2769</span>
+                    </div>
+                    <div class="entity-stats-grid">
+                      <div class="entity-stat">
+                        <span class="es-label">Accounts on Device</span>
+                        <span class="es-val" id="ent-dev-accounts">1</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Other Accounts</span>
+                        <span class="es-val" id="ent-dev-other-acc">0</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Prior Orders</span>
+                        <span class="es-val" id="ent-dev-orders">6</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Prior Refunds</span>
+                        <span class="es-val highlight-stat" id="ent-dev-refunds">2</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Shipping Address Card -->
+                  <div class="entity-subcard">
+                    <div class="entity-subcard-header">
+                      <span class="entity-type-badge">SHIPPING ADDRESS</span>
+                      <span class="entity-masked-id" id="ent-ship-id">ADDR-***1608</span>
+                    </div>
+                    <div class="entity-stats-grid">
+                      <div class="entity-stat">
+                        <span class="es-label">Accounts at Address</span>
+                        <span class="es-val" id="ent-ship-accounts">1</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Other Accounts</span>
+                        <span class="es-val" id="ent-ship-other-acc">0</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Prior Orders</span>
+                        <span class="es-val" id="ent-ship-orders">6</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Prior Refunds</span>
+                        <span class="es-val" id="ent-ship-refunds">2</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Billing Address Card -->
+                  <div class="entity-subcard">
+                    <div class="entity-subcard-header">
+                      <span class="entity-type-badge">BILLING ADDRESS</span>
+                      <span class="entity-masked-id" id="ent-bill-id">ADDR-***1608</span>
+                    </div>
+                    <div class="entity-stats-grid">
+                      <div class="entity-stat">
+                        <span class="es-label">Accounts at Address</span>
+                        <span class="es-val" id="ent-bill-accounts">2</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Other Accounts</span>
+                        <span class="es-val" id="ent-bill-other-acc">1</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Prior Orders</span>
+                        <span class="es-val" id="ent-bill-orders">7</span>
+                      </div>
+                      <div class="entity-stat">
+                        <span class="es-label">Prior Refunds</span>
+                        <span class="es-val" id="ent-bill-refunds">2</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Entity Graph Visualization Canvas / Diagram -->
+                <div class="graph-vis-wrapper">
+                  <div class="graph-vis-header">
+                    <span class="gv-title">RELATIONAL TOPOLOGY</span>
+                    <span class="gv-count" id="ent-total-linked">Total Linked External Accounts: 1</span>
+                  </div>
+                  <div class="graph-vis-canvas" id="entity-graph-diagram">
+                    <!-- Rendered dynamically by app.js -->
+                  </div>
+                </div>
+              </section>
+
+              <!-- 2F. WHAT STANDS OUT? -->
+              <section class="intel-card highlight-border-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">💡</span>
+                    <h3 class="card-heading">WHAT STANDS OUT?</h3>
+                  </div>
+                  <span class="card-tag tag-insights">Key Takeaways</span>
+                </div>
+                <p class="card-context-note">Empirical insights translated from live causal and entity features into plain business English.</p>
+
+                <ul class="stands-out-list" id="stands-out-items">
+                  <!-- Rendered dynamically by app.js -->
+                </ul>
+              </section>
+
+              <!-- 2G. WHY THIS ASSESSMENT? -->
+              <section class="intel-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">🔍</span>
+                    <h3 class="card-heading">WHY THIS ASSESSMENT?</h3>
+                  </div>
+                  <span class="card-tag">Model Signals</span>
+                </div>
+                <p class="card-context-note">Key predictive signals evaluated by Model C with empirical evidence and risk rationale.</p>
+
+                <div class="structured-signals-container" id="structured-signals-list">
+                  <!-- Rendered dynamically by app.js -->
+                </div>
+              </section>
+
+              <!-- 2H. REFUND DECISION SUPPORT -->
+              <section class="intel-card decision-support-card" id="decision-support-card">
+                <div class="card-title-bar">
+                  <div class="title-with-icon">
+                    <span class="card-icon">📋</span>
+                    <h3 class="card-heading">REFUND DECISION SUPPORT</h3>
+                  </div>
+                  <span class="card-tag tag-action" id="ds-tier-tag">MEDIUM TIER</span>
+                </div>
+                
+                <div class="decision-content-box">
+                  <h4 class="action-recommendation-title" id="ds-action-title">ADDITIONAL VERIFICATION</h4>
+                  <p class="action-guidance-text" id="ds-guidance-text">Some behavioural or entity signals are elevated. Additional verification may reduce unnecessary loss while avoiding immediate rejection.</p>
+                  
+                  <div class="operational-checklist">
+                    <span class="checklist-title">Recommended Review Steps:</span>
+                    <ul class="checklist-items" id="ds-checklist-items">
+                      <li>Review device dispute history and customer stated return reason.</li>
+                      <li>Cross-reference shipping courier tracking verification.</li>
+                      <li>Request standard item condition photo before disburse authorization.</li>
+                    </ul>
+                  </div>
+
+                  <div class="safety-disclaimer-sub">
+                    <strong>Human Review Guarantee:</strong> RiskGraph does not automatically reject claims. Final dispute resolution decisions remain with authorized human analysts.
+                  </div>
+                </div>
+              </section>
+
+            </div>
+
+          </div>
+
+          <!-- 3. POINT-IN-TIME DISCLOSURE & MODEL METADATA FOOTER -->
+          <section class="transparency-section">
+            <div class="transparency-card">
+              <div class="transparency-header">
+                <span class="t-icon">🔒</span>
+                <h4>POINT-IN-TIME DATA PROTECTION</h4>
+              </div>
+              <p>RiskGraph evaluates the claim using historical information available strictly before the return request cutoff date. Future transactions and the current refund outcome are permanently excluded from model features.</p>
+            </div>
+
+            <div class="model-meta-card">
+              <div class="model-meta-header">
+                <span class="t-icon">⚙️</span>
+                <h4>MODEL & POLICY SPECIFICATION</h4>
+              </div>
+              <div class="model-meta-grid">
+                <div><strong>Model:</strong> Model C — Hybrid ML + Entity Graph</div>
+                <div><strong>Features:</strong> 55 Point-in-Time Features</div>
+                <div><strong>Version:</strong> step_2_8_frozen_v1</div>
+                <div><strong>Routing:</strong> T₁ = 0.20 · T₂ = 0.45</div>
+                <div class="full-grid-item"><strong>Purpose:</strong> Defensive refund decision support (Zero auto-rejection · Zero customer banning)</div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </section>
+
+      <!-- Trust & Audit Footer -->
+      <footer class="app-footer">
+        <div class="footer-meta-pill">
+          <span class="meta-item"><strong>RISKGRAPH</strong> Case Intelligence</span>
+          <span class="meta-sep">·</span>
+          <span class="meta-item">Model C Frozen Pipeline</span>
+          <span class="meta-sep">·</span>
+          <span class="meta-item">Supabase PostgreSQL Causal Engine</span>
+          <span class="meta-sep">·</span>
+          <span class="meta-item badge-trust">Defensive Decision Support Only</span>
+        </div>
+        <p class="footer-disclaimer">
+          RiskGraph provides point-in-time risk intelligence to assist human specialists. Scores do not constitute legal fraud determinations or automatic dispute resolutions.
+        </p>
+      </footer>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
